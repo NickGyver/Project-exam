@@ -1,7 +1,29 @@
+ /*Основное задание
+
+Реализовать программу записная книжка с возможностью сохранения записей в файл.
+
+Предоставить пользователю возможности выбора в меню :
+1.	Добавить запись
+2.	Просмотреть ближайшую по дате запись
+3.	Просмотреть все записи
+4.	Просмотреть запись / записи по критериям поискового запроса
+
+Пример содержания записи :
+
+#1 28.01.2020 Запись....
+#2 29.01.2020 Запись....
+
+Дополнительное задание
+
+Реализовать возможность сохранения каждой записи в отдельном файле с возможностью ее редактирования(изменения заметки).*/
+
+
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
 #include <conio.h>
+#include <ctime>
 
 using namespace std;
 
@@ -130,8 +152,8 @@ int main()
 	int ContactNumber;
 
 	Contact* MainPtr = new Contact[size];
-	MainPtr[0] = Contact{ "Nikita", "Fiodorov", "Kriviy Rih", "25", "0123456789" };
-	MainPtr[1] = Contact{ "Igor", "Petrov", "Kyiv", "22", "0242426789" };
+	MainPtr[0] = Contact{ "Vasily", "Ivanov", "Kriviy Rih", "25", "0123456789" };
+	MainPtr[1] = Contact{ "Igor", "Petrov", "Kyiv", "32", "0242426789" };
 
 	Contact n_contact;
 
@@ -348,13 +370,15 @@ void ReadFile(Contact*& notebook, int& size, int& count, ifstream& ifile)
 }
 void WriteFile(Contact* arr, int count, ofstream& ofile)
 {
-	Date d1(31, 1, 2020); 
+	//Date d1(31, 1, 2020); 
+	time_t now = time(0);
+	char* dt = ctime(&now);
 
 	for (int i = 0; i < count; i++)
 	{
 
-		ofile << "#" << i + 1 << " "
-			//<<  << " "
+		ofile <<endl<< "#" << i + 1 << " "
+			<< dt << " "
 			<< arr[i].fname << " "
 			<< arr[i].sname << " "
 			<< arr[i].address << " "
