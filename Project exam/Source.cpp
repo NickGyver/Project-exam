@@ -1,4 +1,4 @@
- /*Основное задание
+/*Основное задание
 
 Реализовать программу записная книжка с возможностью сохранения записей в файл.
 
@@ -24,8 +24,9 @@
 #include <fstream>
 #include <conio.h>
 #include <ctime>
-
 using namespace std;
+
+
 
 class Date   //не задействован
 {
@@ -371,19 +372,25 @@ void ReadFile(Contact*& notebook, int& size, int& count, ifstream& ifile)
 void WriteFile(Contact* arr, int count, ofstream& ofile)
 {
 	//Date d1(31, 1, 2020); 
-	time_t now = time(0);
-	char* dt = ctime(&now);
+
+
+
 
 	for (int i = 0; i < count; i++)
 	{
+		time_t now = i+time(0);
+		tm* ltm = localtime(&now);
+		ofile << endl << "#" << i + 1 << " "
+			//<< dt << " "
+			<< 1900 + ltm->tm_year << "/" << 1 + ltm->tm_mon << "/" << ltm->tm_mday << " "
+			<< ltm->tm_hour << ":" << 30 + ltm->tm_min << ":" << ltm->tm_sec << endl << " "
 
-		ofile <<endl<< "#" << i + 1 << " "
-			<< dt << " "
 			<< arr[i].fname << " "
 			<< arr[i].sname << " "
 			<< arr[i].address << " "
 			<< arr[i].age << " "
 			<< arr[i].phone << endl;
+
 	}
 
 }
