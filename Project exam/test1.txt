@@ -1,12 +1,4 @@
+#1 14.3.2021 Vasily Ivanov // Kriviy Rih // 25 // 0123456789
 
-#1 2021/3/14 11:64:54
- Vasily Ivanov Kriviy Rih 25 0123456789
+#2 14.3.2021 Igor Petrov // Kyiv // 32 // 0242426789
 
-#2 2021/3/14 11:64:55
- Igor Petrov Kyiv 32 0242426789
-
-#3 2021/3/14 11:64:56
- sdgsadg asgasgd fsh4 44 1231231233
-
-#4 2021/3/14 11:64:57
- sdfhdfh dhgf dfghfg4 66 2342323423

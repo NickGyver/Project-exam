@@ -17,113 +17,12 @@
 
 Реализовать возможность сохранения каждой записи в отдельном файле с возможностью ее редактирования(изменения заметки).*/
 
-
-
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
 #include <conio.h>
 #include <ctime>
 using namespace std;
-
-
-
-class Date   //не задействован
-{
-public:
-	Date(int d = 0, int m = 0, int y = 0)
-	{
-		setDate(d, m, y);
-	}
-
-	Date(const Date& date)
-	{
-		setDate(date.day, date.month, date.year);
-	}
-
-	~Date()
-	{
-
-	}
-
-	int getDay() const
-	{
-		return day;
-	}
-
-	int getMonth() const
-	{
-		return month;
-	}
-
-	int getYear() const
-	{
-		return year;
-	}
-
-	void setDay(int day)
-	{
-		this->day = day;
-	}
-
-	void setMonth(int month)
-	{
-		this->month = month;
-	}
-
-	void setYear(int year)
-	{
-		this->year = year;
-	}
-
-	void setDate(int day, int month, int year)
-	{
-		if (isValidDate(day, month, year))
-		{
-			setDay(day);
-			setMonth(month);
-			setYear(year);
-		}
-		else {
-			throw  string("Not valid date");
-		}
-	}
-
-	void print() const
-	{
-		cout << day << '.'
-			<< month << '.'
-			<< year << endl;
-	}
-
-	static bool isValidDate(int day, int month, int year)
-	{
-		if ((day < 1 || day>31) || (month < 1 || month>12))
-		{
-			cout << "Not valid date" << endl;
-		}
-		return true;
-	}
-
-	static bool isLeapYear(int year)
-	{
-
-		return ((year % 4 == 0 && year % 100 != 0) || year % 400);
-
-	}
-
-	static int dayInMonth(int month)
-	{
-		int days[12] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
-		if (isLeapYear)days[1] = 29;
-		return days[month - 1];
-	}
-
-private:
-	int day;
-	int month;
-	int year;
-};
 
 class Contact
 {
@@ -138,6 +37,7 @@ public:
 const int EXT = 5;
 
 void AddContact(Contact*&, int&, int&, Contact&);
+void EditContact(Contact*&, int&, int, int);
 void DeleteContact(Contact*& MainPtr, int&, int, int);
 void ShowContact(Contact*, int);
 void ShowAll(Contact*, int);
@@ -159,15 +59,13 @@ int main()
 	Contact n_contact;
 
 	char MenuChoise, Exit;
-	//bool sorting;
 
 	do
 	{
 		do
 		{
 			system("cls");
-			cout << "******** NOTE BOOK ********" << endl << endl;
-			cout << "(1) ADD NEW CONTACT" << endl << "(2) EDIT CONTACT" << endl << "(3) DELETE CONTACT" << endl
+			cout << "(1) ADD NEW CONTACT" << endl << "(2) EDIT CONTACT [W.I.P]" << endl << "(3) DELETE CONTACT" << endl
 				<< "(4) SHOW ALL CONTACTS" << endl << "(5) SHOW ONE CONTACT" << endl << "(6) FIND CONTACT" <<
 				endl << "(7) SAVE FILE" << endl << "(8) LOAD FILE" << endl << "(9) EXIT" << endl << endl;
 			MenuChoise = _getch();
@@ -191,6 +89,25 @@ int main()
 
 			AddContact(MainPtr, size, count, n_contact);
 			break;
+			//////////// EDITING (Currently not working)
+
+
+
+		//case '2':
+		//	cout << "Enter the number of contact for editing: " << endl;
+		//	cin >> ContactNumber;
+		//	cin.ignore();
+		//	if (ContactNumber > count || ContactNumber < 1)
+		//	{
+		//		cout << "Invalid number!" << endl;
+		//		break;
+		//	}
+		//	EditContact(MainPtr, count, size, ContactNumber - 1);
+		//	break;
+
+
+
+		//////////// 
 		case '3':
 			cout << "Enter the number of contact for deleting: " << endl;
 			cin >> ContactNumber;
@@ -217,7 +134,7 @@ int main()
 			ShowContact(MainPtr, ContactNumber - 1);
 			break;
 		case '6':
-			cout << "Enter the number of contact for searching: (0 - Name, 1 - Number, else - break)" << endl;
+			cout << "Enter the number of contact for searching: (0 - Name, 1 - Phone Number, else - break)" << endl;
 			cin >> ContactNumber;
 			cin.ignore();
 			if (ContactNumber == 0)
@@ -230,16 +147,14 @@ int main()
 			else if (ContactNumber == 1)
 			{
 				char Number[150];
-				cout << "Enter number: " << endl;
+				cout << "Enter phone number: " << endl;
 				cin.getline(Number, 150);
 				FindContactFromNumber(MainPtr, count, Number);
 			}
-
 			break;
 		case '7':
 		{
-
-			cout << "Enter file name for writing: ";	//можно приписывать сразу с расширением файла
+			cout << "Enter file name for writing: ";	//можно приписывать с расширением файла
 			char fName[30];
 			cin.getline(fName, 30);
 			//cin.ignore();
@@ -252,7 +167,6 @@ int main()
 		break;
 		case '8':
 		{
-
 			cout << "Enter file name for reading: " << endl;
 			cin.ignore();
 			char fName[30];
@@ -266,16 +180,12 @@ int main()
 			}
 		}
 		break;
-
 		case '9':
 			return 0;
 		}
-
 		cout << endl << "Do you want to make another operation? (1 - yes, 0 - no)" << endl;
 		Exit = _getch();
 	} while (Exit != '0');
-
-
 	delete[]MainPtr;
 	MainPtr = nullptr;
 }
@@ -290,16 +200,36 @@ void AddContact(Contact*& notebook, int& size, int& count, Contact& NewContact)
 		{
 			temp[i] = notebook[i];
 		}
-
 		delete[]notebook;
 		notebook = temp;
 	}
 	notebook[count] = NewContact;
-
 	cout << endl << "New cоntact has been added:" << endl;
 	ShowContact(notebook, count);
 	count++;
 }
+
+
+/////////////////// EDITING (currently not working)
+//void EditContact(Contact*& notebook, int& count, int size, int number)
+//{
+//	Contact* temp = new Contact[size];
+//
+//	for (int i = 0; i < number; i++)
+//	{
+//		temp[i] = notebook[i];
+//	}
+//	for (int i = number; i < size; i++)
+//	{
+//		temp[i] = notebook[i];
+//	}
+//	delete[]notebook;
+//	notebook = temp;
+//	
+//
+//	cout << endl << "Cоntact has been edited." << endl;
+//}
+//////////////////////////
 
 void DeleteContact(Contact*& notebook, int& count, int size, int number)
 {
@@ -312,13 +242,10 @@ void DeleteContact(Contact*& notebook, int& count, int size, int number)
 	{
 		temp[i] = notebook[i];
 	}
-
 	delete[]notebook;
 	notebook = temp;
 	count--;
-
 	cout << endl << "Cоntact has been removed." << endl;
-
 }
 
 void FindContactFromNumber(Contact* arr, int count, char* Number)
@@ -327,7 +254,7 @@ void FindContactFromNumber(Contact* arr, int count, char* Number)
 		if (strcmp(arr[i].phone, Number) == 0)
 		{
 			ShowContact(arr, i);
-			//return;
+			
 		}
 	cout << endl << "Cоntact not found" << endl;
 }
@@ -338,7 +265,7 @@ void FindContactFromName(Contact* arr, int count, char* Name)
 		if (strcmp(arr[i].fname, Name) == 0)
 		{
 			ShowContact(arr, i);
-			//return;
+			
 		}
 	cout << endl << "Cоntact not found" << endl;
 }
@@ -367,30 +294,26 @@ void ReadFile(Contact*& notebook, int& size, int& count, ifstream& ifile)
 		sscanf(str, "%s %s %s %s %s", NewContact.fname, NewContact.sname, NewContact.address, NewContact.age, NewContact.phone);
 		AddContact(notebook, size, count, NewContact);
 	}
-
 }
 void WriteFile(Contact* arr, int count, ofstream& ofile)
 {
-	//Date d1(31, 1, 2020); 
-
-
-
-
 	for (int i = 0; i < count; i++)
 	{
-		time_t now = i+time(0);
+		time_t now = time(0);
 		tm* ltm = localtime(&now);
-		ofile << endl << "#" << i + 1 << " "
-			//<< dt << " "
-			<< 1900 + ltm->tm_year << "/" << 1 + ltm->tm_mon << "/" << ltm->tm_mday << " "
-			<< ltm->tm_hour << ":" << 30 + ltm->tm_min << ":" << ltm->tm_sec << endl << " "
+		ofile << "#" << i + 1 << " "
+			<< ltm->tm_mday << "."
+			<< 1 + ltm->tm_mon << "."
+			<< 1900 + ltm->tm_year << " "
+
+			/*<< ltm->tm_hour << ":"
+			<< ltm->tm_min << ":"
+			<< ltm->tm_sec << " | "*/  
 
 			<< arr[i].fname << " "
-			<< arr[i].sname << " "
-			<< arr[i].address << " "
-			<< arr[i].age << " "
-			<< arr[i].phone << endl;
-
+			<< arr[i].sname << " // "
+			<< arr[i].address << " // "
+			<< arr[i].age << " // "
+			<< arr[i].phone << "\n\n";
 	}
-
 }
